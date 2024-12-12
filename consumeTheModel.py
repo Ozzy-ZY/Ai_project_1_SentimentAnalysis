@@ -8,9 +8,9 @@ from sklearn.model_selection import train_test_split
 import pickle
 
 # Load the model saved in .h5 format
-model = load_model("sentiment_analysis_model.h5")
+model = load_model("A_better_model.h5")
 # Load the tokenizer
-with open('tokenizer.pickle', 'rb') as handle:
+with open('the_better_tokenizer.pickle', 'rb') as handle:
     tokenizer = pickle.load(handle)
 # Example input text
 new_texts = ["I loved the movie, it was fantastic!", "the movie is not good"]

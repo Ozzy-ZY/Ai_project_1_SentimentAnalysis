@@ -49,7 +49,7 @@ with open('tokenizer.pickle', 'wb') as handle:
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # Training the model
-epochs = 5  # Increase epochs for better learning
+epochs = 15  # Increase epochs for better learning
 batch_size = 64  # Increase batch size
 model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=epochs, batch_size=batch_size)
 
