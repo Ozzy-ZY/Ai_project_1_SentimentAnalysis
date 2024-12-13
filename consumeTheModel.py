@@ -1,34 +1,34 @@
 ﻿import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout
+from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.models import load_model
-from sklearn.model_selection import train_test_split
 import pickle
 
 # Load the model saved in .h5 format
 model = load_model("A_better_model.h5")
+
 # Load the tokenizer
 with open('the_better_tokenizer.pickle', 'rb') as handle:
     tokenizer = pickle.load(handle)
-# Example input text
-new_texts = ["I loved the movie, it was fantastic!", "the movie is not good"]
 
-# Convert the text to sequences using the loaded tokenizer
-new_sequences = tokenizer.texts_to_sequences(new_texts)
-max_vocab_size = 20000  # Increase vocabulary size
-max_sequence_length = 150  # Increase sequence length for better context
-# Pad the sequences to ensure uniform length
-new_padded_sequences = pad_sequences(new_sequences, maxlen=max_sequence_length, padding='post')
+# Define constants
+max_vocab_size = 20000  # Vocabulary size
+max_sequence_length = 150  # Sequence length for padding
 
-# Make predictions
-predictions = model.predict(new_padded_sequences)
-print(predictions)
-# Convert probabilities to binary sentiment labels
-predicted_labels = ['positive' if p >= 0.5 else 'negative' for p in predictions]
+def predict_sentiment(single_text):
+    sequence = tokenizer.texts_to_sequences([single_text])
+    padded_sequence = pad_sequences(sequence, maxlen=max_sequence_length, padding='post')
 
-# Print results
-for text, label in zip(new_texts, predicted_labels):
-    print(f"Text: {text}\nPredicted Sentiment: {label}\n")
+    prediction = model.predict(padded_sequence)
+    sentiment_label = 'positive' if prediction[0][0] >= 0.5 else 'negative'
+    return sentiment_label
 
+if __name__ == "__main__":
+    print("Enter a review to analyze its sentiment (type 'exit' to quit):")
+    while True:
+        text = input("Enter a review: ")
+        if text.lower() == 'exit':
+            print("Exiting sentiment analysis. Goodbye!")
+            break
+        sentiment = predict_sentiment(text)
+        print(f"Predicted Sentiment: {sentiment}\n")
